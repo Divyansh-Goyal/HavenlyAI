@@ -3,6 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from ..core.db import get_db
 from ..core.security import decode_token
+from ..core.redis import is_token_jti_blacklisted
 from ..models.user import User
 
 
@@ -18,6 +19,10 @@ def get_current_user(
     data = decode_token(credentials.credentials)
     if not data or "sub" not in data:
         raise HTTPException(status_code=401, detail="Invalid token")
+    # deny if token is blacklisted via jti
+    jti = data.get("jti")
+    if jti and is_token_jti_blacklisted(str(jti)):
+        raise HTTPException(status_code=401, detail="Token expired")
     user = db.query(User).get(int(data["sub"]))
     if not user:
         raise HTTPException(status_code=401, detail="User not found")

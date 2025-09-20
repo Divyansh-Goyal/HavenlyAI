@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
+import uuid
 
 from jose import jwt, JWTError
 from passlib.context import CryptContext
@@ -23,7 +24,12 @@ def create_access_token(subject: str, expires_minutes: Optional[int] = None, ext
     if expires_minutes is None:
         expires_minutes = settings.access_token_expire_minutes
     expire = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes)
-    to_encode: dict[str, Any] = {"sub": subject, "exp": expire, **(extra_claims or {})}
+    to_encode: dict[str, Any] = {
+        "sub": subject,
+        "exp": expire,
+        "jti": uuid.uuid4().hex,
+        **(extra_claims or {}),
+    }
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=ALGORITHM)
     return encoded_jwt
 

@@ -19,6 +19,7 @@ export function AppLayout() {
           <nav className="flex items-center gap-6 text-sm text-gray-700">
             <Link to="/" className="hover:text-gray-900">Dashboard</Link>
             <Link to="/projects/new" className="hover:text-gray-900">New Project</Link>
+            <Link to="/account/password" className="hover:text-gray-900">Change password</Link>
           </nav>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-600">{user?.email}</span>

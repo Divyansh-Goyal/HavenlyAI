@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import { LoginPage } from './pages/Login'
 import { DashboardPage } from './pages/Dashboard'
+import { SignupPage } from './pages/Signup'
+import { ChangePasswordPage } from './pages/ChangePassword'
 import { AppLayout } from './components/AppLayout'
 import { useAuthStore } from './store/auth'
 import { ProjectCreatePage } from './pages/ProjectCreate'
@@ -18,6 +20,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route
         path="/"
         element={
@@ -28,6 +31,7 @@ export default function App() {
       >
         <Route index element={<DashboardPage />} />
         <Route path="projects/new" element={<ProjectCreatePage />} />
+        <Route path="account/password" element={<ChangePasswordPage />} />
         <Route path="projects/:projectId" element={<ProjectDetailPage />} />
         <Route path="gallery" element={<Gallery />} />
       </Route>
