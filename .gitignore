@@ -1,0 +1,70 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Env files (keep examples)
+.env
+.env.*
+!.env.example
+!backend/.env.example
+.envrc
+
+# Databases
+dev.db
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Build artifacts (root-level)
+dist/
+build/
+coverage/
+.cache/
+
+# Frontend (Vite/React)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+frontend/coverage/
+# temp files created during local debugging
+frontend/test.css
+frontend/test-login.css
+
+# TypeScript
+**/*.tsbuildinfo
+
+# Python (Backend)
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.mruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+backend/.venv/
+
