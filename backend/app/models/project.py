@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, Float
 from ..core.db import Base
 
 
@@ -10,6 +10,8 @@ class Project(Base):
     name: Mapped[str] = mapped_column(String(255))
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     status: Mapped[str] = mapped_column(String(20), default="processing")
+    budget: Mapped[float | None] = mapped_column(Float, nullable=True)
+    style: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     owner = relationship("User")
 

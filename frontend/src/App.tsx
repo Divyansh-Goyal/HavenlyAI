@@ -8,6 +8,7 @@ import { AppLayout } from './components/AppLayout'
 import { useAuthStore } from './store/auth'
 import { ProjectCreatePage } from './pages/ProjectCreate'
 import { ProjectDetailPage } from './pages/ProjectDetail'
+import { ProjectEditPage } from './pages/ProjectEdit'
 import { Gallery } from './components/Gallery'
 import type { ReactElement } from 'react'
 
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="projects/new" element={<ProjectCreatePage />} />
         <Route path="account/password" element={<ChangePasswordPage />} />
         <Route path="projects/:projectId" element={<ProjectDetailPage />} />
+        <Route path="projects/:projectId/edit" element={<ProjectEditPage />} />
         <Route path="gallery" element={<Gallery />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

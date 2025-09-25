@@ -92,3 +92,101 @@ export function ThreeBackground() {
 }
 
 
+export function ThreeRoomViewer({ imageUrl }: { imageUrl?: string }) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const animationRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    const container = containerRef.current
+
+    const scene = new THREE.Scene()
+    scene.background = new THREE.Color('#f8fafc')
+
+    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000)
+    camera.position.set(0, 1.4, 3)
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setSize(container.clientWidth, container.clientHeight)
+    container.appendChild(renderer.domElement)
+
+    const ambient = new THREE.AmbientLight('#ffffff', 0.8)
+    scene.add(ambient)
+    const dir = new THREE.DirectionalLight('#cbd5e1', 0.6)
+    dir.position.set(2, 3, 2)
+    scene.add(dir)
+
+    const room = new THREE.Group()
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: '#e2e8f0' })
+    const floorMaterial = new THREE.MeshStandardMaterial({ color: '#d1d5db', roughness: 0.9 })
+
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(4, 3), floorMaterial)
+    floor.rotation.x = -Math.PI / 2
+    room.add(floor)
+
+    const backWall = new THREE.Mesh(new THREE.PlaneGeometry(4, 2.5), wallMaterial)
+    backWall.position.set(0, 1.25, -1.5)
+    room.add(backWall)
+
+    const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(3, 2.5), wallMaterial)
+    leftWall.position.set(-2, 1.25, 0)
+    leftWall.rotation.y = Math.PI / 2
+    room.add(leftWall)
+
+    const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(3, 2.5), wallMaterial)
+    rightWall.position.set(2, 1.25, 0)
+    rightWall.rotation.y = -Math.PI / 2
+    room.add(rightWall)
+
+    scene.add(room)
+
+    if (imageUrl) {
+      const loader = new THREE.TextureLoader()
+      loader.load(
+        imageUrl,
+        (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace
+          const ratio = tex.image.width / tex.image.height
+          const h = 1.2
+          const w = h * ratio
+          const art = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex }))
+          art.position.set(0, 1.4, -1.49)
+          scene.add(art)
+        },
+        undefined,
+        () => {
+          // ignore errors, just render room
+        },
+      )
+    }
+
+    let t = 0
+    const animate = () => {
+      t += 0.01
+      camera.position.x = Math.sin(t) * 0.5
+      camera.lookAt(0, 1.0, 0)
+      renderer.render(scene, camera)
+      animationRef.current = requestAnimationFrame(animate)
+    }
+    animate()
+
+    const onResize = () => {
+      camera.aspect = container.clientWidth / container.clientHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(container.clientWidth, container.clientHeight)
+    }
+    window.addEventListener('resize', onResize)
+
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current)
+      window.removeEventListener('resize', onResize)
+      container.removeChild(renderer.domElement)
+      renderer.dispose()
+    }
+  }, [imageUrl])
+
+  return <div ref={containerRef} className="w-full h-64 rounded-md border bg-white" />
+}
+
+
